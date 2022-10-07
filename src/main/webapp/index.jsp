@@ -56,6 +56,9 @@
 <form action="addCartItem" method="post">
     <input type="submit" value="Add to cart">
 </form>
+<form action="addUser" method="post">
+    <input type="submit" value="Add User">
+</form>
 
 </body>
 </html>

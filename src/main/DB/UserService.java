@@ -56,7 +56,7 @@ public class UserService {
         return list;
     }
 
-    public static void addUser(String username, String password, String role) {
+    public static UserBO addUser(String username, String password, String role) {
         try {
             Connection connection = DBManager.getConnection();
             String sql = "INSERT INTO user (username, password, role) VALUES (?,?,?)";
@@ -65,9 +65,12 @@ public class UserService {
             pStatement.setString(2, password);
             pStatement.setString(3, role);
             pStatement.execute();
+            UserDBO userFromDB = new UserDBO(username, password, role);
+            return DBOtoBO(userFromDB);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static void removeUser(String username) {

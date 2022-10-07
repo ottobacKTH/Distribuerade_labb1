@@ -65,6 +65,9 @@ public class ControllerServlet extends HttpServlet {
             case"/addCartItem":
                 addCartItem(request,response);
                 break;
+            case "/addUser":
+                addUser(request, response);
+                break;
             default:
                 break;
         }
@@ -95,6 +98,22 @@ public class ControllerServlet extends HttpServlet {
         session.removeAttribute("user");
         session.invalidate();
         response.sendRedirect("login.jsp");
+    }
+    private void addUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String role = request.getParameter("role");
+        UserDTO user = userManagement.addUser(new UserDTO(username,password,role));
+        if(user != null){
+            HttpSession session = request.getSession();
+            session.invalidate();
+            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher.forward(request,response);
+        }
+        else{
+            response.sendRedirect("addUser.jsp");
+        }
+
     }
     private void getStore(HttpServletRequest request, HttpServletResponse response)
     {

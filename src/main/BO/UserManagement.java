@@ -19,6 +19,20 @@ public class UserManagement {
         }
         return BOtoDTO(loggedInUser);
     }
+
+    public UserDTO addUser(UserDTO userDTO){
+        UserBO user = DTOtoBO(userDTO);
+        if(user.getUsername()==null || user.getPassword()== null || user.getRole() == null)
+        {
+            throw new IllegalStateException("Fill in all fields");
+        }
+        UserBO addedUser = UserService.addUser(user.getUsername(), user.getPassword(), user.getRole());
+        if(addedUser == null){
+            return null;
+        }
+        return BOtoDTO(addedUser);
+    }
+
     private UserBO DTOtoBO(UserDTO DTO)
     {
         return new UserBO(DTO.getUserName(),DTO.getPassword(),DTO.getRole());
