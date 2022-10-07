@@ -112,6 +112,6 @@ public class ControllerServlet extends HttpServlet {
     }
     private void addCartItem(HttpServletRequest request, HttpServletResponse response)
     {
-        System.out.println("addToCart");
+        System.out.println("addToCart, adding," + request.getParameter("storeItemName"));
     }
 }

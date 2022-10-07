@@ -26,13 +26,29 @@
 </form>
 
 <c:forEach items="${storeList}" var="item">
-    ${item.getName()}<br>
+    <form action="addCartItem" method="post">
+        <!-- display field !-->
+        <input name="storeItemId" value="${item.getId()}" disabled>
+        <input name="storeItemName" value="${item.getName()}" disabled>
+        <input name="storeItemPrice" value="${item.getPrice()}" disabled>
+        <input name="storeItemAmount" value="${item.getAmount()}" disabled>
+        <input type="submit" value="Submit">
+        <!-- actual values !-->
+        <input hidden name="storeItemId" value="${item.getId()}">
+        <input hidden name="storeItemName" value="${item.getName()}">
+        <input hidden name="storeItemPrice" value="${item.getPrice()}">
+        <input hidden name="storeItemAmount" value="${item.getAmount()}" >
+    </form>
 </c:forEach>
 
 <h1>Cart</h1>
 <form action="getCart" method="get">
     <input type="submit" value="Get Cart">
 </form>
+
+<c:forEach items="${cartList}" var="item">
+    ${item.getName}<br>
+</c:forEach>
 
 <form action="addStoreItem" method="post">
     <input type="submit" value="Add to store">
