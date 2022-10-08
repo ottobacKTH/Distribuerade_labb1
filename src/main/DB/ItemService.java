@@ -1,6 +1,7 @@
 package main.DB;
 
 import main.BO.ItemBO;
+import main.BO.UserBO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -76,15 +77,17 @@ public class ItemService {
 
 
 
-    public static void addItemToCart(String username, int itemID, int amount) {
+    public static void addItemToCart(ItemBO itemBO, UserBO userBo) {
+        ItemDBO item = BOtoDBO(itemBO);
+        UserDBO user = BOtoDBO(userBo);
         try
         {
             Connection connection = DBManager.getConnection();
             String sql = "INSERT INTO shopping_cart (username, item_id, amount) VALUES (?,?,?)";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1, username);
-            pStatement.setInt(2, itemID);
-            pStatement.setInt(3, amount);
+            pStatement.setString(1, user.getUsername());
+            pStatement.setInt(2, item.getId());
+            pStatement.setInt(3, item.getAmount());
             pStatement.execute();
         }
         catch (Exception e)
@@ -132,6 +135,10 @@ public class ItemService {
     private static ItemBO DBOtoBO(ItemDBO DBO)
     {
         return new ItemBO(DBO.getId(),DBO.getName(),DBO.getPrice(),DBO.getAmount());
+    }
+    private static UserDBO BOtoDBO(UserBO BO)
+    {
+        return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
     }
 
 }

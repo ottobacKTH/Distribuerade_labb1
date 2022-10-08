@@ -51,6 +51,7 @@ public class ControllerServlet extends HttpServlet {
     {
         System.out.println("do post!");
         String requestAction = request.getServletPath();
+        RequestDispatcher dispatcher;
         switch(requestAction)
         {
             case"/login":
@@ -61,9 +62,13 @@ public class ControllerServlet extends HttpServlet {
                 break;
             case"/addStoreItem":
                 addStoreItem(request,response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
                 break;
             case"/addCartItem":
                 addCartItem(request,response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
                 break;
             case "/addUser":
                 addUser(request, response);
@@ -129,8 +134,26 @@ public class ControllerServlet extends HttpServlet {
     {
         System.out.println("addToStore");
     }
-    private void addCartItem(HttpServletRequest request, HttpServletResponse response)
-    {
-        System.out.println("addToCart, adding," + request.getParameter("storeItemName"));
+    private void addCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("addCart");
+        if(request.getParameter("amountToAdd") == null || request.getParameter("amountToAdd").equals(""))
+        {
+            throw new IllegalStateException("need to add 1 or more items");
+        }
+        String name = request.getParameter("storeItemName");
+        int id = Integer.parseInt(request.getParameter("storeItemId"));
+        int price = Integer.parseInt(request.getParameter("storeItemPrice"));
+        int amount = Integer.parseInt(request.getParameter("amountToAdd"));
+        HttpSession session = request.getSession();
+        ItemDTO item = new ItemDTO(id, name, price, amount);
+        UserDTO user;
+        if(session.getAttribute("user") instanceof UserDTO)
+        {
+            user = (UserDTO) session.getAttribute("user");
+            itemManagement.addItemToCart(item,user);
+        }
+        else {
+            logout(request,response);
+        }
     }
 }

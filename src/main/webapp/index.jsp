@@ -14,7 +14,7 @@
         response.sendRedirect("login.jsp");
     }
 %>
-<h2>Welcome to the shop, ${user.getUserName()} ${user.getRole()}!</h2>
+<h2>Welcome to the shop, ${user.getUsername()} ${user.getRole()}!</h2>
 <form action="logout" method="post">
     <input type="submit" value="Logout">
 </form>
@@ -32,12 +32,13 @@
         <input name="storeItemName" value="${item.getName()}" disabled>
         <input name="storeItemPrice" value="${item.getPrice()}" disabled>
         <input name="storeItemAmount" value="${item.getAmount()}" disabled>
-        <input type="submit" value="Submit">
+        <label for="amountToAdd">amount to add:</label>
+        <input type="text" id="amountToAdd" name="amountToAdd">
+        <input type="submit" value="Add to cart!">
         <!-- actual values !-->
         <input hidden name="storeItemId" value="${item.getId()}">
         <input hidden name="storeItemName" value="${item.getName()}">
         <input hidden name="storeItemPrice" value="${item.getPrice()}">
-        <input hidden name="storeItemAmount" value="${item.getAmount()}" >
     </form>
 </c:forEach>
 

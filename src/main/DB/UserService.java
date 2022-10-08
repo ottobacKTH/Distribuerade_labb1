@@ -88,8 +88,5 @@ public class UserService {
     {
         return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
     }
-    private static UserBO DBOtoBO(UserDBO DBO)
-    {
-        return new UserBO(DBO.getUsername(), DBO.getPassword(), DBO.getRole());
-    }
+    private static UserBO DBOtoBO(UserDBO DBO) { return new UserBO(DBO.getUsername(), DBO.getPassword(), DBO.getRole()); }
 }

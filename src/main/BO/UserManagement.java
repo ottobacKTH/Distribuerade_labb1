@@ -35,7 +35,7 @@ public class UserManagement {
 
     private UserBO DTOtoBO(UserDTO DTO)
     {
-        return new UserBO(DTO.getUserName(),DTO.getPassword(),DTO.getRole());
+        return new UserBO(DTO.getUsername(),DTO.getPassword(),DTO.getRole());
     }
     private UserDTO BOtoDTO(UserBO BO)
     {
