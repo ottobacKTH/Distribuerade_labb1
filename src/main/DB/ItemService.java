@@ -36,14 +36,43 @@ public class ItemService {
         return BOlist;
     }
 
-    public static void addNewItemToStore(int id, String name, int price, int amount) {
+    public static List<ItemBO> getCartItems(UserBO userBO)
+    {
+        ArrayList<ItemDBO> list = new ArrayList<>();
+        UserDBO user = BOtoDBO(userBO);
+        try {
+            Connection connection = DBManager.getConnection();
+            String sql = ("SELECT i.id, i.name, i.price, s.amount FROM item i, shopping_cart s WHERE s.username = ? AND i.id = s.item_id");
+            PreparedStatement pStatement = connection.prepareStatement(sql);
+            pStatement.setString(1,user.getUsername());
+            pStatement.execute();
+            ResultSet rs = pStatement.getResultSet();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int price = rs.getInt("price");
+                int amount = rs.getInt("amount");
+                list.add(new ItemDBO(id, name, price, amount));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ArrayList<ItemBO> BOlist = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++)
+        {
+            BOlist.add(DBOtoBO(list.get(i)));
+        }
+        return BOlist;
+    }
+    public static void addNewItemToStore(ItemBO itemBO) {
+        ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "INSERT INTO item (name, price, amount) VALUES (?,?,?)";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1,name);
-            pStatement.setInt(2,price);
-            pStatement.setInt(3,amount);
+            pStatement.setString(1,item.getName());
+            pStatement.setInt(2,item.getPrice());
+            pStatement.setInt(3,item.getAmount());
             pStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();

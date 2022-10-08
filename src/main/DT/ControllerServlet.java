@@ -39,6 +39,7 @@ public class ControllerServlet extends HttpServlet {
             case"/getCart":
                 getCart(request,response);
                 dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
                 break;
             default:
                 getStore(request,response);
@@ -129,6 +130,10 @@ public class ControllerServlet extends HttpServlet {
     private void getCart(HttpServletRequest request, HttpServletResponse response)
     {
         System.out.println("getFromCart");
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        List<ItemDTO> list = itemManagement.getCart(user);
+        request.setAttribute("cartList",list);
     }
     private void addStoreItem(HttpServletRequest request, HttpServletResponse response)
     {

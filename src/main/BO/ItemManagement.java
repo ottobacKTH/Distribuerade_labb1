@@ -19,6 +19,16 @@ public class ItemManagement {
         return DTOlist;
     }
 
+    public List<ItemDTO> getCart(UserDTO userDTO)
+    {
+        List<ItemBO> BOlist = ItemService.getCartItems(DTOtoBO(userDTO));
+        List<ItemDTO> DTOlist = new ArrayList<>();
+        for(int i = 0; i < BOlist.size(); i++)
+        {
+            DTOlist.add(BOtoDTO(BOlist.get(i)));
+        }
+        return DTOlist;
+    }
     public void addItemToCart(ItemDTO itemDTO, UserDTO userDTO) {
         ItemBO item = DTOtoBO(itemDTO);
         UserBO user = DTOtoBO(userDTO);

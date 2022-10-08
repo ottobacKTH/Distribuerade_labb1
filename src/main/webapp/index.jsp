@@ -24,21 +24,22 @@
 <form action="getStore" method="get">
     <input type="submit" value="Get Store">
 </form>
-
 <c:forEach items="${storeList}" var="item">
     <form action="addCartItem" method="post">
         <!-- display field !-->
         <input name="storeItemId" value="${item.getId()}" disabled>
+        <input hidden name="storeItemId" value="${item.getId()}">
+
         <input name="storeItemName" value="${item.getName()}" disabled>
+        <input hidden name="storeItemName" value="${item.getName()}">
+
         <input name="storeItemPrice" value="${item.getPrice()}" disabled>
+        <input hidden name="storeItemPrice" value="${item.getPrice()}">
+
         <input name="storeItemAmount" value="${item.getAmount()}" disabled>
         <label for="amountToAdd">amount to add:</label>
         <input type="text" id="amountToAdd" name="amountToAdd">
         <input type="submit" value="Add to cart!">
-        <!-- actual values !-->
-        <input hidden name="storeItemId" value="${item.getId()}">
-        <input hidden name="storeItemName" value="${item.getName()}">
-        <input hidden name="storeItemPrice" value="${item.getPrice()}">
     </form>
 </c:forEach>
 
@@ -46,11 +47,25 @@
 <form action="getCart" method="get">
     <input type="submit" value="Get Cart">
 </form>
+<table>
+    <c:if test="${cartList != null}">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>price</th>
+            <th>amount</th>
+        </tr>
 
-<c:forEach items="${cartList}" var="item">
-    ${item.getName}<br>
-</c:forEach>
-
+        <c:forEach items="${cartList}" var="item">
+            <tr>
+                <th>${item.getId()}</th>
+                <th>${item.getName()}</th>
+                <th>${item.getPrice()}</th>
+                <th>${item.getAmount()}</th>
+            </tr>
+        </c:forEach>
+    </c:if>
+</table>
 <form action="addStoreItem" method="post">
     <input type="submit" value="Add to store">
 </form>
