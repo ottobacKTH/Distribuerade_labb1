@@ -13,8 +13,10 @@ public class ItemService {
         ArrayList<ItemDBO> list = new ArrayList<>();
         try {
             Connection connection = DBManager.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * from item");
+            String sql = "SELECT * FROM item";
+            PreparedStatement pStatement = connection.prepareStatement(sql);
+            pStatement.execute();
+            ResultSet rs = pStatement.getResultSet();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
