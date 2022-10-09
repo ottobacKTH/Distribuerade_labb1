@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.BO.ItemManagement;
 import main.BO.UserManagement;
+import org.apache.coyote.Request;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,6 +69,11 @@ public class ControllerServlet extends HttpServlet {
                 break;
             case"/addCartItem":
                 addCartItem(request,response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
+                break;
+            case"/purchaseCart":
+                purchaseCart(request,response);
                 dispatcher = request.getRequestDispatcher("index.jsp");
                 dispatcher.forward(request,response);
                 break;
@@ -151,11 +157,22 @@ public class ControllerServlet extends HttpServlet {
         int amount = Integer.parseInt(request.getParameter("amountToAdd"));
         HttpSession session = request.getSession();
         ItemDTO item = new ItemDTO(id, name, price, amount);
-        UserDTO user;
-        if(session.getAttribute("user") instanceof UserDTO)
+        if(session.getAttribute("user") instanceof UserDTO && session.getAttribute("user")!= null)
         {
-            user = (UserDTO) session.getAttribute("user");
+            UserDTO user = (UserDTO) session.getAttribute("user");
             itemManagement.addItemToCart(item,user);
+        }
+        else {
+            logout(request,response);
+        }
+    }
+    private void purchaseCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("purchaseCart");
+        HttpSession session = request.getSession();
+        if(session.getAttribute("user") instanceof UserDTO && session.getAttribute("user")!= null)
+        {
+            UserDTO user = (UserDTO) session.getAttribute("user");
+            request.setAttribute("purchased", itemManagement.purchaseCart(user));
         }
         else {
             logout(request,response);

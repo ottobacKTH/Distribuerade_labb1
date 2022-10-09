@@ -66,12 +66,14 @@
         </c:forEach>
     </c:if>
 </table>
-<form action="addStoreItem" method="post">
-    <input type="submit" value="Add to store">
+<form action="purchaseCart" method="post">
+    <input type="submit" value="purchase cart">
 </form>
-<form action="addCartItem" method="post">
-    <input type="submit" value="Add to cart">
-</form>
+<c:if test="${purchased != null}">
+    <c:if test="${purchased}"> Cart has been purchased!</c:if>
+    <c:if test="${!purchased}"> Cart could not be purchased!</c:if>
+</c:if>
+
 <form action="addUser" method="post">
     <input type="submit" value="Add User">
 </form>

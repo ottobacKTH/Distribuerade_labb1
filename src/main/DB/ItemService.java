@@ -3,10 +3,7 @@ package main.DB;
 import main.BO.ItemBO;
 import main.BO.UserBO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +76,64 @@ public class ItemService {
         }
     }
 
+    public static boolean makePurchase(UserBO userBO) {
+        UserDBO user = BOtoDBO(userBO);
+        try
+        {
+            Connection connection = DBManager.getConnection();
+            connection.setAutoCommit(false);
+
+            List<ItemDBO> itemList = new ArrayList<>();
+            String sql = "SELECT i.id, i.name, i.price, i.amount AS item_amount, s.amount AS cart_amount FROM item i, shopping_cart s WHERE s.username = ? AND i.id = s.item_id ORDER BY i.id";
+            PreparedStatement pStatement = connection.prepareStatement(sql);
+            pStatement.setString(1,user.getUsername());
+            pStatement.execute();
+            ResultSet rs = pStatement.getResultSet();
+            while(rs.next())
+            {
+                ItemDBO fetchedItem = new ItemDBO(rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getInt("item_amount") - rs.getInt("cart_amount"));
+                if(fetchedItem.getAmount() < 0)
+                {
+                    throw new IllegalStateException("too many wares of type: " + fetchedItem.getName() + " in your cart");
+                }
+                itemList.add(fetchedItem);
+            }
+            if(itemList.size() == 0)
+            {
+                throw new IllegalStateException("no items in cart");
+            }
+
+            sql = "UPDATE item i, shopping_cart s SET i.amount = (i.amount - s.amount) WHERE s.username = ? AND i.id = s.item_id";
+            pStatement = connection.prepareStatement(sql);
+            pStatement.setString(1, user.getUsername());
+            pStatement.execute();
+
+            sql = "DELETE FROM shopping_cart WHERE username = ?";
+            pStatement = connection.prepareStatement(sql);
+            pStatement.setString(1, user.getUsername());
+            pStatement.execute();
+
+            connection.setAutoCommit(true);
+            return true;
+        }
+        catch (SQLException sqlException)
+        {
+            Connection connection = DBManager.getConnection();
+            try
+            {
+                connection.rollback();
+            }
+            catch (SQLException rollbackException)
+            {
+                rollbackException.printStackTrace();
+            }
+            sqlException.printStackTrace();
+            return false;
+        }
+    }
     public static void removeItemFromStore(int id) {
         try {
             Connection connection = DBManager.getConnection();

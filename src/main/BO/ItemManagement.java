@@ -42,6 +42,11 @@ public class ItemManagement {
         }
         ItemService.addItemToCart(item,user);
     }
+    public boolean purchaseCart(UserDTO userDTO)
+    {
+        UserBO user = DTOtoBO(userDTO);
+        return ItemService.makePurchase(user);
+    }
     private ItemDTO BOtoDTO(ItemBO BO)
     {
         return new ItemDTO(BO.getId(),BO.getName(),BO.getPrice(), BO.getAmount());
