@@ -8,9 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemManagement {
+
+    private ItemService itemService;
+
+    public ItemManagement()
+    {
+        itemService = new ItemService();
+    }
     public List<ItemDTO> getStorage()
     {
-        List<ItemBO> BOlist = ItemService.getStoreItems();
+        List<ItemBO> BOlist = itemService.getStoreItems();
         List<ItemDTO> DTOlist = new ArrayList<>();
         for(int i = 0; i < BOlist.size(); i++)
         {
@@ -21,7 +28,7 @@ public class ItemManagement {
 
     public List<ItemDTO> getCart(UserDTO userDTO)
     {
-        List<ItemBO> BOlist = ItemService.getCartItems(DTOtoBO(userDTO));
+        List<ItemBO> BOlist = itemService.getCartItems(DTOtoBO(userDTO));
         List<ItemDTO> DTOlist = new ArrayList<>();
         for(int i = 0; i < BOlist.size(); i++)
         {
@@ -40,12 +47,12 @@ public class ItemManagement {
         {
             throw new IllegalStateException("can't add 0 or less items");
         }
-        ItemService.addItemToCart(item,user);
+        itemService.addItemToCart(item,user);
     }
     public boolean purchaseCart(UserDTO userDTO)
     {
         UserBO user = DTOtoBO(userDTO);
-        return ItemService.makePurchase(user);
+        return itemService.makePurchase(user);
     }
     private ItemDTO BOtoDTO(ItemBO BO)
     {

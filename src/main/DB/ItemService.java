@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ItemService {
 
-    public static List<ItemBO> getStoreItems() {
+    public List<ItemBO> getStoreItems() {
         ArrayList<ItemDBO> list = new ArrayList<>();
         try {
             Connection connection = DBManager.getConnection();
@@ -33,7 +33,7 @@ public class ItemService {
         return BOlist;
     }
 
-    public static List<ItemBO> getCartItems(UserBO userBO)
+    public List<ItemBO> getCartItems(UserBO userBO)
     {
         ArrayList<ItemDBO> list = new ArrayList<>();
         UserDBO user = BOtoDBO(userBO);
@@ -61,7 +61,7 @@ public class ItemService {
         }
         return BOlist;
     }
-    public static void addNewItemToStore(ItemBO itemBO) {
+    public void addNewItemToStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
@@ -76,7 +76,7 @@ public class ItemService {
         }
     }
 
-    public static boolean makePurchase(UserBO userBO) {
+    public boolean makePurchase(UserBO userBO) {
         UserDBO user = BOtoDBO(userBO);
         try
         {
@@ -134,7 +134,7 @@ public class ItemService {
             return false;
         }
     }
-    public static void removeItemFromStore(int id) {
+    public void removeItemFromStore(int id) {
         try {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM item WHERE id = ?";
@@ -146,7 +146,7 @@ public class ItemService {
         }
     }
 
-    public static void changeAmountFromStore(int id, int amount) {
+    public void changeAmountFromStore(int id, int amount) {
         try {
             Connection connection = DBManager.getConnection();
             String sql = "Update item SET amount = ? WHERE id = ?";
@@ -161,7 +161,7 @@ public class ItemService {
 
 
 
-    public static void addItemToCart(ItemBO itemBO, UserBO userBo) {
+    public void addItemToCart(ItemBO itemBO, UserBO userBo) {
         ItemDBO item = BOtoDBO(itemBO);
         UserDBO user = BOtoDBO(userBo);
         try
@@ -180,7 +180,7 @@ public class ItemService {
         }
     }
 
-    public static void changeItemAmountFromCart(String username, int itemID, int amount) {
+    public void changeItemAmountFromCart(String username, int itemID, int amount) {
         try
         {
             Connection connection = DBManager.getConnection();
@@ -197,7 +197,7 @@ public class ItemService {
         }
     }
 
-    public static void removeItemFromCart(String username, int itemID) {
+    public void removeItemFromCart(String username, int itemID) {
         try
         {
             Connection connection = DBManager.getConnection();
@@ -212,15 +212,15 @@ public class ItemService {
             e.printStackTrace();
         }
     }
-    private static ItemDBO BOtoDBO(ItemBO BO)
+    private ItemDBO BOtoDBO(ItemBO BO)
     {
         return new ItemDBO(BO.getId(),BO.getName(),BO.getPrice(),BO.getAmount());
     }
-    private static ItemBO DBOtoBO(ItemDBO DBO)
+    private ItemBO DBOtoBO(ItemDBO DBO)
     {
         return new ItemBO(DBO.getId(),DBO.getName(),DBO.getPrice(),DBO.getAmount());
     }
-    private static UserDBO BOtoDBO(UserBO BO)
+    private UserDBO BOtoDBO(UserBO BO)
     {
         return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
     }

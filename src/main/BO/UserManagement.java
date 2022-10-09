@@ -5,6 +5,13 @@ import main.DB.UserService;
 import main.DT.UserDTO;
 
 public class UserManagement {
+
+    private UserService userService;
+
+    public UserManagement()
+    {
+        userService = new UserService();
+    }
     public UserDTO login(UserDTO userDTO)
     {
         UserBO user = DTOtoBO(userDTO);
@@ -12,7 +19,7 @@ public class UserManagement {
         {
             throw new IllegalStateException("Users' username or password wasn't entered");
         }
-        UserBO loggedInUser = UserService.getUser(user);
+        UserBO loggedInUser = userService.getUser(user);
         if(loggedInUser == null)
         {
             return null;
@@ -26,7 +33,7 @@ public class UserManagement {
         {
             throw new IllegalStateException("Fill in all fields");
         }
-        UserBO addedUser = UserService.addUser(user.getUsername(), user.getPassword(), user.getRole());
+        UserBO addedUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
         if(addedUser == null){
             return null;
         }

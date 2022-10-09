@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
-    public static UserBO getUser(UserBO loginUser)
+    public UserBO getUser(UserBO loginUser)
     {
         try
         {
@@ -38,7 +38,7 @@ public class UserService {
         }
         return null;
     }
-    public static List<UserBO> getUsers() {
+    public List<UserBO> getUsers() {
         ArrayList<UserBO> list = new ArrayList<>();
         try {
             Connection connection = DBManager.getConnection();
@@ -56,7 +56,7 @@ public class UserService {
         return list;
     }
 
-    public static UserBO addUser(String username, String password, String role) {
+    public UserBO addUser(String username, String password, String role) {
         try {
             Connection connection = DBManager.getConnection();
             String sql = "INSERT INTO user (username, password, role) VALUES (?,?,?)";
@@ -73,7 +73,7 @@ public class UserService {
         return null;
     }
 
-    public static void removeUser(String username) {
+    public void removeUser(String username) {
         try {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM user WHERE username = ?";
@@ -84,9 +84,9 @@ public class UserService {
             e.printStackTrace();
         }
     }
-    private static UserDBO BOtoDBO(UserBO BO)
+    private UserDBO BOtoDBO(UserBO BO)
     {
         return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
     }
-    private static UserBO DBOtoBO(UserDBO DBO) { return new UserBO(DBO.getUsername(), DBO.getPassword(), DBO.getRole()); }
+    private UserBO DBOtoBO(UserDBO DBO) { return new UserBO(DBO.getUsername(), DBO.getPassword(), DBO.getRole()); }
 }
