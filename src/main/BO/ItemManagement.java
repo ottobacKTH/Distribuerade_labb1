@@ -48,7 +48,11 @@ public class ItemManagement {
         {
             throw new IllegalStateException("can't add 0 or less items");
         }
-        itemService.addItemToCart(item,user);
+        if(itemService.addItemToCart(item,user) == 0)
+        {
+            throw new IllegalStateException("item couldn't be added");
+        }
+
     }
     public boolean purchaseCart(UserDTO userDTO)
     {
