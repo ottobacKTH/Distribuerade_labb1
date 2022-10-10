@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
-    public UserBO getUser(UserBO loginUser)
+    public UserBO getUser(UserBO userBO)
     {
+        UserDBO user = new UserDBO(userBO.getUsername(), userBO.getPassword(),"");
         try
         {
-            UserDBO user = BOtoDBO(loginUser);
             Connection connection = DBManager.getConnection();
             String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1, loginUser.getUsername());
-            pStatement.setString(2,loginUser.getPassword());
+            pStatement.setString(1, user.getUsername());
+            pStatement.setString(2,user.getPassword());
             ResultSet result = pStatement.executeQuery();
             if(result.next())
             {
@@ -56,40 +56,42 @@ public class UserService {
         return list;
     }
 
-    public UserBO addUser(String username, String password, String role) {
+    public int addUser(UserBO userBO) {
+        UserDBO user = BOtoDBO(userBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "INSERT INTO user (username, password, role) VALUES (?,?,?)";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1, username);
-            pStatement.setString(2, password);
-            pStatement.setString(3, role);
-            pStatement.execute();
-            UserDBO userFromDB = new UserDBO(username, password, role);
-            return DBOtoBO(userFromDB);
+            pStatement.setString(1, user.getUsername());
+            pStatement.setString(2, user.getPassword());
+            pStatement.setString(3, user.getRole());
+            int affectedRows = pStatement.executeUpdate();
+            return affectedRows;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return 0;
     }
 
-    public UserBO removeUser(String username, String password, String role) {
+    public int removeUser(UserBO userBO) {
+        UserDBO user = BOtoDBO(userBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM user WHERE username = ? AND password = ? AND role = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1, username);
-            pStatement.setString(2, password);
-            pStatement.setString(3,role);
-            pStatement.execute();
+            pStatement.setString(1, user.getUsername());
+            pStatement.setString(2, user.getPassword());
+            pStatement.setString(3, user.getRole());
+            int affectedRows = pStatement.executeUpdate();
+            return affectedRows;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return 0;
     }
     private UserDBO BOtoDBO(UserBO BO)
     {
-        return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
+        return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRoleStr());
     }
     private UserBO DBOtoBO(UserDBO DBO) { return new UserBO(DBO.getUsername(), DBO.getPassword(), DBO.getRole()); }
 }

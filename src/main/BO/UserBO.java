@@ -6,12 +6,23 @@ public class UserBO {
 
     private final String username;
     private String password;
-    private String role;
+    private Role role;
 
     public UserBO(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        this.role = Role.valueOf(role.toUpperCase());
+    }
+    public UserBO(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
         this.role = role;
+    }
+
+    public UserBO(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -27,13 +38,17 @@ public class UserBO {
         return Objects.hash(username, password, role);
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleStr() {
+        return role.name().toLowerCase();
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public Role getRoleEnum(){ return role; };
+
+    public void setRoleStr(String role) {
+        this.role = Role.valueOf(role.toUpperCase());
     }
+
+    public void setRoleEnum(Role role) {this.role = role;}
 
     public String getUsername() {
         return username;

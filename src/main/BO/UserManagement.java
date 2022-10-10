@@ -27,7 +27,7 @@ public class UserManagement {
     }
     public UserDTO login(UserDTO userDTO)
     {
-        UserBO user = DTOtoBO(userDTO);
+        UserBO user = new UserBO(userDTO.getUsername(), userDTO.getPassword());
         if(user.getUsername()==null || user.getPassword()== null)
         {
             throw new IllegalStateException("Users' username or password wasn't entered");
@@ -42,28 +42,28 @@ public class UserManagement {
 
     public UserDTO addUser(UserDTO userDTO){
         UserBO user = DTOtoBO(userDTO);
-        if(user.getUsername()==null || user.getPassword()== null || user.getRole() == null)
+        if(user.getUsername()==null || user.getPassword()== null || user.getRoleEnum() == null)
         {
             throw new IllegalStateException("Fill in all fields");
         }
-        UserBO addedUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
-        if(addedUser == null){
+        int rows = userService.addUser(user);
+        if(rows == 0){
             return null;
         }
-        return BOtoDTO(addedUser);
+        return BOtoDTO(user);
     }
 
     public UserDTO removeUser(UserDTO userDTO){
         UserBO user = DTOtoBO(userDTO);
-        if(user.getUsername()==null || user.getPassword()== null || user.getRole() == null)
+        if(user.getUsername()==null || user.getPassword()== null || user.getRoleEnum() == null)
         {
             throw new IllegalStateException("Fill in all fields");
         }
-        UserBO removedUser = userService.removeUser(user.getUsername(), user.getPassword(), user.getRole());
-        if(removedUser == null){
+        int rowsAffected = userService.removeUser(user);
+        if(rowsAffected == 0){
             return null;
         }
-        return BOtoDTO(removedUser);
+        return BOtoDTO(user);
     }
 
     private UserBO DTOtoBO(UserDTO DTO)
@@ -72,7 +72,7 @@ public class UserManagement {
     }
     private UserDTO BOtoDTO(UserBO BO)
     {
-        return new UserDTO(BO.getUsername(), BO.getPassword(), BO.getRole());
+        return new UserDTO(BO.getUsername(), BO.getPassword(), BO.getRoleStr());
     }
 
 

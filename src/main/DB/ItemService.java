@@ -224,7 +224,7 @@ public class ItemService {
     }
     private UserDBO BOtoDBO(UserBO BO)
     {
-        return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRole());
+        return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRoleStr());
     }
 
 }

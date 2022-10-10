@@ -65,7 +65,7 @@ public class ItemManagement {
 
     private UserDTO BOtoDTO(UserBO BO)
     {
-        return new UserDTO(BO.getUsername(),BO.getPassword(),BO.getRole());
+        return new UserDTO(BO.getUsername(),BO.getPassword(),BO.getRoleStr());
     }
     private UserBO DTOtoBO(UserDTO DTO)
     {
