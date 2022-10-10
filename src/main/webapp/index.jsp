@@ -97,22 +97,22 @@
 </table>
 
 <form action="addUser" method="post">
-    <label for="username">username:</label>
-    <input type="text" id="username" name="username"><br>
-    <label for="password">password:</label>
-    <input type="password" id="password" name="password"><br>
-    <label for="role">role:</label>
-    <input type="role" id="role" name="role"><br>
+    <label for="usernameAdd">username:</label>
+    <input type="text" id="usernameAdd" name="username"><br>
+    <label for="passwordAdd">password:</label>
+    <input type="password" id="passwordAdd" name="password"><br>
+    <label for="roleAdd">role:</label>
+    <input type="role" id="roleAdd" name="role"><br>
     <input type="submit" value="Add User">
 </form>
 
 <form action="removeUser" method="post">
-    <label for="username">username:</label>
-    <input type="text" id="username" name="username"><br>
-    <label for="password">password:</label>
-    <input type="password" id="password" name="password"><br>
-    <label for="role">role:</label>
-    <input type="role" id="role" name="role"><br>
+    <label for="usernameRemove">username:</label>
+    <input type="text" id="usernameRemove" name="username"><br>
+    <label for="passwordRemove">password:</label>
+    <input type="password" id="passwordRemove" name="password"><br>
+    <label for="roleRemove">role:</label>
+    <input type="role" id="roleRemove" name="role"><br>
     <input type="submit" value="Remove User">
 </form>
 </body>
