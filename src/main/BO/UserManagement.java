@@ -1,6 +1,7 @@
 package main.BO;
 
 
+import main.DB.UserDatabaseService;
 import main.DB.UserService;
 import main.DT.UserDTO;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class UserManagement {
 
-    private UserService userService;
+    private UserDatabaseService userService;
 
     public UserManagement()
     {

@@ -13,11 +13,11 @@ import java.util.List;
 public interface ItemDatabaseService {
     public List<ItemBO> getStoreItems();
     public List<ItemBO> getCartItems(UserBO userBO);
-    public void addNewItemToStore(ItemBO itemBO) ;
+    public int addNewItemToStore(ItemBO itemBO) ;
     public boolean makePurchase(UserBO userBO);
-    public void removeItemFromStore(ItemBO itemBO);
-    public void changeAmountFromStore(ItemBO itemBO);
-    public void addItemToCart(ItemBO itemBO, UserBO userBO);
-    public void changeItemAmountFromCart(UserBO userBO, ItemBO itemBO);
-    public void removeItemFromCart(UserBO userBO, ItemBO itemBO) ;
+    public int removeItemFromStore(ItemBO itemBO);
+    public int changeAmountFromStore(ItemBO itemBO);
+    public int addItemToCart(ItemBO itemBO, UserBO userBO);
+    public int changeItemAmountFromCart(UserBO userBO, ItemBO itemBO);
+    public int removeItemFromCart(UserBO userBO, ItemBO itemBO) ;
 }

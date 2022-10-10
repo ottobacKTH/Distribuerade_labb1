@@ -66,7 +66,7 @@ public class ItemService implements ItemDatabaseService {
         return BOlist;
     }
     @Override
-    public void addNewItemToStore(ItemBO itemBO) {
+    public int addNewItemToStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
@@ -75,10 +75,11 @@ public class ItemService implements ItemDatabaseService {
             pStatement.setString(1,item.getName());
             pStatement.setInt(2,item.getPrice());
             pStatement.setInt(3,item.getAmount());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
@@ -140,22 +141,24 @@ public class ItemService implements ItemDatabaseService {
             return false;
         }
     }
+    //shopping_cart har delete cascade
     @Override
-    public void removeItemFromStore(ItemBO itemBO) {
+    public int removeItemFromStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM item WHERE id = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
             pStatement.setInt(1,item.getId());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
-    public void changeAmountFromStore(ItemBO itemBO) {
+    public int changeAmountFromStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
@@ -163,15 +166,16 @@ public class ItemService implements ItemDatabaseService {
             PreparedStatement pStatement = connection.prepareStatement(sql);
             pStatement.setInt(1,item.getAmount());
             pStatement.setInt(2,item.getId());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
 
     @Override
-    public void addItemToCart(ItemBO itemBO, UserBO userBO) {
+    public int addItemToCart(ItemBO itemBO, UserBO userBO) {
         ItemDBO item = BOtoDBO(itemBO);
         UserDBO user = BOtoDBO(userBO);
         try
@@ -182,16 +186,17 @@ public class ItemService implements ItemDatabaseService {
             pStatement.setString(1, user.getUsername());
             pStatement.setInt(2, item.getId());
             pStatement.setInt(3, item.getAmount());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
-    public void changeItemAmountFromCart(UserBO userBO, ItemBO itemBO) {
+    public int changeItemAmountFromCart(UserBO userBO, ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         UserDBO user = BOtoDBO(userBO);
         try
@@ -202,16 +207,17 @@ public class ItemService implements ItemDatabaseService {
             pStatement.setInt(1, item.getAmount());
             pStatement.setString(2, user.getUsername());
             pStatement.setInt(3, item.getId());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
-    public void removeItemFromCart(UserBO userBO, ItemBO itemBO) {
+    public int removeItemFromCart(UserBO userBO, ItemBO itemBO) {
         UserDBO user = BOtoDBO(userBO);
         ItemDBO item = BOtoDBO(itemBO);
         try
@@ -221,12 +227,13 @@ public class ItemService implements ItemDatabaseService {
             PreparedStatement pStatement = connection.prepareStatement(sql);
             pStatement.setString(1, user.getUsername());
             pStatement.setInt(2, item.getId());
-            pStatement.execute();
+            return pStatement.executeUpdate();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return 0;
     }
     private ItemDBO BOtoDBO(ItemBO BO)
     {

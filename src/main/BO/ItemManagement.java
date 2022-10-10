@@ -1,5 +1,6 @@
 package main.BO;
 
+import main.DB.ItemDatabaseService;
 import main.DB.ItemService;
 import main.DT.ItemDTO;
 import main.DT.UserDTO;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class ItemManagement {
 
-    private ItemService itemService;
+    private ItemDatabaseService itemService;
 
     public ItemManagement()
     {
