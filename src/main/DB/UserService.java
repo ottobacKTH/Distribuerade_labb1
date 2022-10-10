@@ -9,7 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService {
+public class UserService implements UserDatabaseService{
+    @Override
     public UserBO getUser(UserBO userBO)
     {
         UserDBO user = new UserDBO(userBO.getUsername(), userBO.getPassword(),"");
@@ -38,6 +39,7 @@ public class UserService {
         }
         return null;
     }
+    @Override
     public List<UserBO> getUsers() {
         ArrayList<UserBO> list = new ArrayList<>();
         try {
@@ -55,7 +57,7 @@ public class UserService {
         }
         return list;
     }
-
+    @Override
     public int addUser(UserBO userBO) {
         UserDBO user = BOtoDBO(userBO);
         try {
@@ -72,7 +74,7 @@ public class UserService {
         }
         return 0;
     }
-
+    @Override
     public int removeUser(UserBO userBO) {
         UserDBO user = BOtoDBO(userBO);
         try {

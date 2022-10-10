@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemService {
+public class ItemService implements ItemDatabaseService {
 
+    @Override
     public List<ItemBO> getStoreItems() {
         ArrayList<ItemDBO> list = new ArrayList<>();
         try {
@@ -35,6 +36,7 @@ public class ItemService {
         return BOlist;
     }
 
+    @Override
     public List<ItemBO> getCartItems(UserBO userBO)
     {
         ArrayList<ItemDBO> list = new ArrayList<>();
@@ -63,6 +65,7 @@ public class ItemService {
         }
         return BOlist;
     }
+    @Override
     public void addNewItemToStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
         try {
@@ -78,6 +81,7 @@ public class ItemService {
         }
     }
 
+    @Override
     public boolean makePurchase(UserBO userBO) {
         UserDBO user = BOtoDBO(userBO);
         try
@@ -136,25 +140,29 @@ public class ItemService {
             return false;
         }
     }
-    public void removeItemFromStore(int id) {
+    @Override
+    public void removeItemFromStore(ItemBO itemBO) {
+        ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM item WHERE id = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setInt(1,id);
+            pStatement.setInt(1,item.getId());
             pStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void changeAmountFromStore(int id, int amount) {
+    @Override
+    public void changeAmountFromStore(ItemBO itemBO) {
+        ItemDBO item = BOtoDBO(itemBO);
         try {
             Connection connection = DBManager.getConnection();
             String sql = "Update item SET amount = ? WHERE id = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setInt(1,amount);
-            pStatement.setInt(2,id);
+            pStatement.setInt(1,item.getAmount());
+            pStatement.setInt(2,item.getId());
             pStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,10 +170,10 @@ public class ItemService {
     }
 
 
-
-    public void addItemToCart(ItemBO itemBO, UserBO userBo) {
+    @Override
+    public void addItemToCart(ItemBO itemBO, UserBO userBO) {
         ItemDBO item = BOtoDBO(itemBO);
-        UserDBO user = BOtoDBO(userBo);
+        UserDBO user = BOtoDBO(userBO);
         try
         {
             Connection connection = DBManager.getConnection();
@@ -182,15 +190,18 @@ public class ItemService {
         }
     }
 
-    public void changeItemAmountFromCart(String username, int itemID, int amount) {
+    @Override
+    public void changeItemAmountFromCart(UserBO userBO, ItemBO itemBO) {
+        ItemDBO item = BOtoDBO(itemBO);
+        UserDBO user = BOtoDBO(userBO);
         try
         {
             Connection connection = DBManager.getConnection();
             String sql = "Update shopping_cart SET amount = ? WHERE username = ? AND item_id = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setInt(1, amount);
-            pStatement.setString(2, username);
-            pStatement.setInt(3, itemID);
+            pStatement.setInt(1, item.getAmount());
+            pStatement.setString(2, user.getUsername());
+            pStatement.setInt(3, item.getId());
             pStatement.execute();
         }
         catch (Exception e)
@@ -199,14 +210,17 @@ public class ItemService {
         }
     }
 
-    public void removeItemFromCart(String username, int itemID) {
+    @Override
+    public void removeItemFromCart(UserBO userBO, ItemBO itemBO) {
+        UserDBO user = BOtoDBO(userBO);
+        ItemDBO item = BOtoDBO(itemBO);
         try
         {
             Connection connection = DBManager.getConnection();
             String sql = "DELETE FROM shopping_cart WHERE username = ? AND item_id = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
-            pStatement.setString(1, username);
-            pStatement.setInt(2, itemID);
+            pStatement.setString(1, user.getUsername());
+            pStatement.setInt(2, item.getId());
             pStatement.execute();
         }
         catch (Exception e)
