@@ -74,9 +74,46 @@
     <c:if test="${!purchased}"> Cart could not be purchased!</c:if>
 </c:if>
 
+
+
+<h1>User</h1>
+<form action="getUser" method="get">
+    <input type="submit" value="Get users">
+</form>
+<table>
+    <c:if test="${userList != null}">
+        <tr>
+            <th>username</th>
+            <th>role</th>
+        </tr>
+
+        <c:forEach items="${userList}" var="user">
+            <tr>
+                <th>${user.getUsername()}</th>
+                <th>${user.getRole()}</th>
+            </tr>
+        </c:forEach>
+    </c:if>
+</table>
+
 <form action="addUser" method="post">
+    <label for="username">username:</label>
+    <input type="text" id="username" name="username"><br>
+    <label for="password">password:</label>
+    <input type="password" id="password" name="password"><br>
+    <label for="role">role:</label>
+    <input type="role" id="role" name="role"><br>
     <input type="submit" value="Add User">
 </form>
 
+<form action="removeUser" method="post">
+    <label for="username">username:</label>
+    <input type="text" id="username" name="username"><br>
+    <label for="password">password:</label>
+    <input type="password" id="password" name="password"><br>
+    <label for="role">role:</label>
+    <input type="role" id="role" name="role"><br>
+    <input type="submit" value="Remove User">
+</form>
 </body>
 </html>

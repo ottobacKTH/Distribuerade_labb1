@@ -42,6 +42,11 @@ public class ControllerServlet extends HttpServlet {
                 dispatcher = request.getRequestDispatcher("index.jsp");
                 dispatcher.forward(request,response);
                 break;
+            case"/getUser":
+                getUser(request,response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
+                break;
             default:
                 getStore(request,response);
                 dispatcher = request.getRequestDispatcher("index.jsp");
@@ -79,6 +84,13 @@ public class ControllerServlet extends HttpServlet {
                 break;
             case "/addUser":
                 addUser(request, response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
+                break;
+            case "/removeUser":
+                removeUser(request, response);
+                dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request,response);
                 break;
             default:
                 break;
@@ -111,21 +123,54 @@ public class ControllerServlet extends HttpServlet {
         session.invalidate();
         response.sendRedirect("login.jsp");
     }
+    private void getUser(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession session = request.getSession();
+        if(((UserDTO) session.getAttribute("user")).getRole().equalsIgnoreCase("admin")) {
+            List<UserDTO> list = userManagement.getUsers();
+            request.setAttribute("userList", list);
+        }
+        else{
+            throw new IllegalStateException("You have no permission to get users! Only who have 'admin' role can get user.");
+        }
+    }
     private void addUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
-        UserDTO user = userManagement.addUser(new UserDTO(username,password,role));
-        if(user != null){
-            HttpSession session = request.getSession();
-            session.invalidate();
-            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-            dispatcher.forward(request,response);
+        HttpSession session = request.getSession();
+        if(session.getAttribute("user") instanceof UserDTO && session.getAttribute("user")!= null)
+        {
+            if(((UserDTO) session.getAttribute("user")).getRole().equalsIgnoreCase("admin")) {
+                UserDTO user = (UserDTO) session.getAttribute("user");
+                UserDTO newUser = userManagement.addUser(new UserDTO(username, password, role));
+            }
+            else{
+                throw new IllegalStateException("You have no permission to add user! Only who have 'admin' role can add user.");
+            }
         }
-        else{
-            response.sendRedirect("addUser.jsp");
+        else {
+            logout(request,response);
         }
-
+    }
+    private void removeUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String role = request.getParameter("role");
+        HttpSession session = request.getSession();
+        if(session.getAttribute("user") instanceof UserDTO && session.getAttribute("user")!= null)
+        {
+            if(((UserDTO) session.getAttribute("user")).getRole().equalsIgnoreCase("admin")) {
+                UserDTO user = (UserDTO) session.getAttribute("user");
+                UserDTO newUser = userManagement.removeUser(new UserDTO(username, password, role));
+            }
+            else{
+                throw new IllegalStateException("You have no permission to remove user! Only who have 'admin' role can remove user.");
+            }
+        }
+        else {
+            logout(request,response);
+        }
     }
     private void getStore(HttpServletRequest request, HttpServletResponse response)
     {

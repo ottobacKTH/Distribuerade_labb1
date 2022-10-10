@@ -73,16 +73,19 @@ public class UserService {
         return null;
     }
 
-    public void removeUser(String username) {
+    public UserBO removeUser(String username, String password, String role) {
         try {
             Connection connection = DBManager.getConnection();
-            String sql = "DELETE FROM user WHERE username = ?";
+            String sql = "DELETE FROM user WHERE username = ? AND password = ? AND role = ?";
             PreparedStatement pStatement = connection.prepareStatement(sql);
             pStatement.setString(1, username);
+            pStatement.setString(2, password);
+            pStatement.setString(3,role);
             pStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
     private UserDBO BOtoDBO(UserBO BO)
     {
