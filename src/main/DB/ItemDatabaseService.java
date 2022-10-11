@@ -1,3 +1,6 @@
+/**
+ * Authors; Otto & Habib
+ */
 package main.DB;
 
 import main.BO.ItemBO;

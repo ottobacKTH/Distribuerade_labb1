@@ -1,3 +1,6 @@
+/**
+ * Authors; Otto & Habib
+ */
 package main.BO;
 
 import java.util.Objects;
