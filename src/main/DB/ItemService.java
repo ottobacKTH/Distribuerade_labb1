@@ -7,8 +7,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class responsible for handling item in the database.
+ * This class access database via DBManger class by sending SQL statements,
+ * Will use DBO objects to communicate with BO layer
+ */
 public class ItemService implements ItemDatabaseService {
 
+    /**
+     * Gets all items in store from the database
+     * @return a list with all items in store with BO representation
+     */
     @Override
     public List<ItemBO> getStoreItems() {
         ArrayList<ItemDBO> list = new ArrayList<>();
@@ -35,7 +44,10 @@ public class ItemService implements ItemDatabaseService {
         }
         return BOlist;
     }
-
+    /**
+     * Gets all items in cart from the database
+     * @return a list with all items in cart with BO representation
+     */
     @Override
     public List<ItemBO> getCartItems(UserBO userBO)
     {
@@ -65,6 +77,12 @@ public class ItemService implements ItemDatabaseService {
         }
         return BOlist;
     }
+
+    /**
+     * adds to the database a new item to store
+     * @param itemBO BO representation of the item
+     * @return 1 (or 0 if failed)
+     */
     @Override
     public int addNewItemToStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
@@ -82,6 +100,11 @@ public class ItemService implements ItemDatabaseService {
         return 0;
     }
 
+    /**
+     * Makes a purchase and delete the a user's shopping cart from database
+     * @param userBO A BO representation of the user
+     * @return true (or false if failed)
+     */
     @Override
     public boolean makePurchase(UserBO userBO) {
         UserDBO user = BOtoDBO(userBO);
@@ -141,6 +164,12 @@ public class ItemService implements ItemDatabaseService {
             return false;
         }
     }
+
+    /**
+     * Removes item from store from the database
+     * @param itemBO BO representation of the item
+     * @return 1 (or 0 if failed)
+     */
     //shopping_cart har delete cascade
     @Override
     public int removeItemFromStore(ItemBO itemBO) {
@@ -157,6 +186,11 @@ public class ItemService implements ItemDatabaseService {
         return 0;
     }
 
+    /**
+     * Changes the amount of item in store in the database
+     * @param itemBO a BO representation of the item
+     * @return 1 (or 0 if failed)
+     */
     @Override
     public int changeAmountFromStore(ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
@@ -174,6 +208,12 @@ public class ItemService implements ItemDatabaseService {
     }
 
 
+    /**
+     * Adds an item to a user's cart in database
+     * @param itemBO BO representation of the item
+     * @param userBO BO representation of the user
+     * @return 1 (or 0 if failed)
+     */
     @Override
     public int addItemToCart(ItemBO itemBO, UserBO userBO) {
         ItemDBO item = BOtoDBO(itemBO);
@@ -195,6 +235,12 @@ public class ItemService implements ItemDatabaseService {
         return 0;
     }
 
+    /**
+     * Changes amount of item in user's cart in database
+     * @param userBO BO representation of user
+     * @param itemBO BO representation of item
+     * @return 1 (or 0 if failed)
+     */
     @Override
     public int changeItemAmountFromCart(UserBO userBO, ItemBO itemBO) {
         ItemDBO item = BOtoDBO(itemBO);
@@ -216,6 +262,12 @@ public class ItemService implements ItemDatabaseService {
         return 0;
     }
 
+    /**
+     * Removes an item from user's cart in database
+     * @param userBO BO representation of user
+     * @param itemBO BO representation of item
+     * @return 1 (or 0 if failed)
+     */
     @Override
     public int removeItemFromCart(UserBO userBO, ItemBO itemBO) {
         UserDBO user = BOtoDBO(userBO);
@@ -235,14 +287,32 @@ public class ItemService implements ItemDatabaseService {
         }
         return 0;
     }
+
+    /**
+     * @param BO the BO representation of item
+     * Converts the representation of item from BO to DBO
+     * @return the DBO representation of item
+     */
     private ItemDBO BOtoDBO(ItemBO BO)
     {
         return new ItemDBO(BO.getId(),BO.getName(),BO.getPrice(),BO.getAmount());
     }
+
+    /**
+     * @param DBO the DBO representation of item
+     * Converts the representation of item from DBO to BO
+     * @return the BO representation of item
+     */
     private ItemBO DBOtoBO(ItemDBO DBO)
     {
         return new ItemBO(DBO.getId(),DBO.getName(),DBO.getPrice(),DBO.getAmount());
     }
+
+    /**
+     * @param BO the BO representation of user
+     * Converts the representation of user from BO to DBO
+     * @return the DBO representation of user
+     */
     private UserDBO BOtoDBO(UserBO BO)
     {
         return new UserDBO(BO.getUsername(), BO.getPassword(), BO.getRoleStr());
