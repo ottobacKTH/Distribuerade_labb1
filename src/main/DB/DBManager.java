@@ -3,10 +3,17 @@ package main.DB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * Class that distributes a logged in connection to the database
+ */
 public class DBManager {
     private static DBManager instance = null;
     private Connection connection = null;
 
+    /**
+     * returns a new DBManager instance if no instance exists. Otherwise return existing
+     * @return DBManager instance
+     */
     private static DBManager getInstance()
     {
         if(instance == null)
@@ -16,6 +23,9 @@ public class DBManager {
         return instance;
     }
 
+    /**
+     * Constructor that creates a connection to the database
+     */
     private DBManager()
     {
         try
@@ -30,6 +40,11 @@ public class DBManager {
 
 
     }
+
+    /**
+     * Return connection to database
+     * @return Connection
+     */
     public static Connection getConnection()
     {
         return getInstance().connection;

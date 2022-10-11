@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * a DB representation of the user
+ */
 public class UserDBO {
 
     private String username;
@@ -11,40 +14,32 @@ public class UserDBO {
     private String password;
     private String role;
 
-    private List<ItemDBO> items;
-
+    /**
+     * full constructor for the user
+     * @param username the users username
+     * @param password the password of the user
+     * @param role the users' role
+     */
     public UserDBO(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
-        items = new ArrayList<>();
     }
 
-    public UserDBO(String username, String password, String role, List<ItemDBO> items) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.items = new ArrayList<>();
-        for(int i = 0; i < items.size(); i++)
-        {
-            this.items.add(items.get(i));
-        }
-    }
-
+    /**
+     * An empty constructor, initiates nothing
+     */
     public UserDBO() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserDBO userDBO = (UserDBO) o;
+        if (!(o instanceof UserDBO userDBO)) return false;
 
         if (!Objects.equals(username, userDBO.username)) return false;
         if (!Objects.equals(password, userDBO.password)) return false;
-        if (!Objects.equals(role, userDBO.role)) return false;
-        return Objects.equals(items, userDBO.items);
+        return Objects.equals(role, userDBO.role);
     }
 
     @Override
@@ -52,49 +47,54 @@ public class UserDBO {
         int result = username != null ? username.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (items != null ? items.hashCode() : 0);
         return result;
     }
 
-
-
+    /**
+     * Get the role of the user
+     * @return the users role
+     */
     public String getRole() {
         return role;
     }
 
+    /**
+     * Set the role of the user
+     * @param role the role to be set
+     */
     public void setRole(String role) {
         this.role = role;
     }
 
+    /**
+     * Get the username of the user
+     * @return the users username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Set the username of the user
+     * @param username the username to be set
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Get the password of the user
+     * @return the users password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Set the password of the user
+     * @param password the password to be set
+     */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<ItemDBO> getItems() {
-        List<ItemDBO> returnList = new ArrayList<>();
-        for(int i = 0; i < items.size(); i++)
-        {
-            returnList.add(items.get(i));
-        }
-        return returnList;
-    }
-
-    public void setItems(List<ItemDBO> items) {
-        for(int i  = 0; i < items.size(); i++)
-        {
-            this.items.add(items.get(i));
-        }
     }
 }
