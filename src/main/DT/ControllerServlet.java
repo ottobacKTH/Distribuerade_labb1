@@ -13,10 +13,18 @@ import org.apache.coyote.Request;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A controller class responsible for managing the requests to the server.
+ * Extends HttpServlet
+ */
 public class ControllerServlet extends HttpServlet {
     private UserManagement userManagement;
     private ItemManagement itemManagement;
 
+    /**
+     * Creates the handles to the BO layer. This method runs when the servlet is created
+     * @throws ServletException
+     */
     @Override
     public void init() throws ServletException
     {
@@ -24,6 +32,13 @@ public class ControllerServlet extends HttpServlet {
         itemManagement = new ItemManagement();
     }
 
+    /**
+     * Manages all GET requests: getStore, getCart and getUser
+     * @param request The HttpRequest received from the call
+     * @param response The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
     {
@@ -43,7 +58,7 @@ public class ControllerServlet extends HttpServlet {
                 dispatcher.forward(request,response);
                 break;
             case"/getUser":
-                getUser(request,response);
+                getUsers(request,response);
                 dispatcher = request.getRequestDispatcher("index.jsp");
                 dispatcher.forward(request,response);
                 break;
@@ -53,6 +68,14 @@ public class ControllerServlet extends HttpServlet {
                 break;
         }
     }
+
+    /**
+     * Manages all the POST request: login, logout, addCartItem, purchaseCart, addUser and removeUser
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
     {
@@ -66,11 +89,6 @@ public class ControllerServlet extends HttpServlet {
                 break;
             case"/logout":
                 logout(request,response);
-                break;
-            case"/addStoreItem":
-                addStoreItem(request,response);
-                dispatcher = request.getRequestDispatcher("index.jsp");
-                dispatcher.forward(request,response);
                 break;
             case"/addCartItem":
                 addCartItem(request,response);
@@ -97,6 +115,14 @@ public class ControllerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Logs in the user if the specified user could be found. Otherwise redirect back to login.jsp
+     * User is kept logged in through the HttpSession, where the userDTO is stored
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     private void login(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
     {
         String username = request.getParameter("username");
@@ -116,6 +142,14 @@ public class ControllerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Logs the user out by removin it from the session and invalidating the session.
+     * redirects to login.jsp
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     private void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
     {
         HttpSession session = request.getSession();
@@ -123,7 +157,13 @@ public class ControllerServlet extends HttpServlet {
         session.invalidate();
         response.sendRedirect("login.jsp");
     }
-    private void getUser(HttpServletRequest request, HttpServletResponse response)
+
+    /**
+     * Gets all users in the system. Appends list as the attribute userList in the request
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     */
+    private void getUsers(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession session = request.getSession();
         if(((UserDTO) session.getAttribute("user")).getRole().equalsIgnoreCase("admin")) {
@@ -134,6 +174,14 @@ public class ControllerServlet extends HttpServlet {
             throw new IllegalStateException("You have no permission to get users! Only who have 'admin' role can get user.");
         }
     }
+
+    /**
+     * Adds a specific user to the system, throws exception if the user attempting to do this isn't an admin
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     private void addUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -153,6 +201,14 @@ public class ControllerServlet extends HttpServlet {
             logout(request,response);
         }
     }
+
+    /**
+     * Removes a specific user, throws exception if the user attempting to do this isn't an admin
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     private void removeUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -172,12 +228,24 @@ public class ControllerServlet extends HttpServlet {
             logout(request,response);
         }
     }
+
+    /**
+     * Gets all the items in the system
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     */
     private void getStore(HttpServletRequest request, HttpServletResponse response)
     {
         System.out.println("get Store!");
         List<ItemDTO> list = itemManagement.getStorage();
         request.setAttribute("storeList",list);
     }
+
+    /**
+     * Gets all the items in the users cart, user is taken from the session
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     */
     private void getCart(HttpServletRequest request, HttpServletResponse response)
     {
         System.out.println("getFromCart");
@@ -186,10 +254,14 @@ public class ControllerServlet extends HttpServlet {
         List<ItemDTO> list = itemManagement.getCart(user);
         request.setAttribute("cartList",list);
     }
-    private void addStoreItem(HttpServletRequest request, HttpServletResponse response)
-    {
-        System.out.println("addToStore");
-    }
+
+    /**
+     * adds a specific item to the cart. Throws exception if amount of items to add to cart is invalid
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws IOException
+     * @throws ServletException
+     */
     private void addCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("addCart");
         if(request.getParameter("amountToAdd") == null || request.getParameter("amountToAdd").equals(""))
@@ -211,6 +283,14 @@ public class ControllerServlet extends HttpServlet {
             logout(request,response);
         }
     }
+
+    /**
+     * Purchase a users cart. If user is invalid redirects to logout
+     * @param request  The HttpRequest received from the call
+     * @param response  The HttpResponse to the call
+     * @throws ServletException
+     * @throws IOException
+     */
     private void purchaseCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("purchaseCart");
         HttpSession session = request.getSession();
